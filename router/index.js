@@ -31,5 +31,8 @@ module.exports = function (app) {
     app.post('/signin/match', (req, res) => {
         signin.signIn(req, res)
     })
-
+    //token 测试
+    app.post('/signin/test', (req, res) => {
+        signin.test(req, res)
+    })
 }
