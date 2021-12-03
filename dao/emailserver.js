@@ -24,8 +24,10 @@ exports.emailSignUp = function (email, res) {
     //发送邮件
     transporter.sendMail(options, function (err, msg) {
         if (err) {
+            res.send(err);
             console.log(err);
         } else {
+            res.send('邮箱发送成功！');
             console.log('邮箱发送成功！');
         }
     })
