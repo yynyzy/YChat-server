@@ -9,9 +9,8 @@ module.exports = function (app) {
         dbserver.findUser(res)
     })
     app.post('/mail', (req, res) => {
-        console.log(1);
+        console.log(req.body);
         let mail = req.body.mail
-        console.log(mail);
         emailserver.emailSignUp(mail, res)
     })
 }

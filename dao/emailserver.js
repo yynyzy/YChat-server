@@ -19,7 +19,7 @@ exports.emailSignUp = function (email, res) {
         to: email,
         subject: '感谢你在YChat注册',
         html: '<span>YChat欢迎你的加入！<a href="https://localhost:8080/">点击</a></span>',
-    }
+    };
 
     //发送邮件
     transporter.sendMail(options, function (err, msg) {

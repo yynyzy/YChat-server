@@ -16,10 +16,10 @@ app.all("*", function (req, res, next) {
     else
         next();
 });
+app.use(bodyParser.json());
 
 require('./router/index')(app)
 
-app.use(bodyParser.json());
 //404
 app.use(function (req, res, next) {
     let err = new Error('NOT FOUND')
