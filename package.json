@@ -5,7 +5,8 @@
   "main": "app.js",
   "dependencies": {
     "express": "^4.17.1",
-    "mongoose": "^6.0.14"
+    "mongoose": "^6.0.14",
+    "nodemailer": "^6.7.2"
   },
   "devDependencies": {},
   "scripts": {
