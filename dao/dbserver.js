@@ -18,8 +18,10 @@ exports.buildUser = function (name, mail, pwd, res) {
     user.save(function (err, result) {
         if (err) {
             res.send({ status: 500 })
+
         } else {
             res.send({ status: 200, result })
+
         }
     })
 
@@ -34,8 +36,10 @@ exports.countUserValued = function () {
     User.countDocuments(wherestr, function (err, result) {
         if (err) {
             res.send({ status: 500 })
+
         } else {
             res.sendStatus({ status: 200, result })
+
         }
     })
 }
@@ -51,6 +55,7 @@ exports.userMath = function (data, pwd, res) {
         } else {
             if (result == '') {
                 res.send({ status: 400 })
+
             }
             result.map(function (e) {
                 const pwdMatch = bcrypt.verification(pwd, e.psw)
@@ -65,8 +70,11 @@ exports.userMath = function (data, pwd, res) {
                     res.send({ status: 200, back })
                 } else {
                     res.send({ status: 400 })
+
                 }
             })
+
+
         }
     })
 }

@@ -11,14 +11,15 @@ app.all("*", function (req, res, next) {
     res.header("X-Powered-By", ' 3.2.1')
     res.header("Content-Type", "application/json;charset=utf-8");
 
-    if (req.method.toLowerCase() == 'options')
+    if (req.method.toLowerCase() == 'options') {
         res.sendStatus(200);  //让options尝试请求快速结束
+    }
     else
         next();
 });
 app.use(bodyParser.json());
-
 require('./router/index')(app)
+
 
 //404
 app.use(function (req, res, next) {
