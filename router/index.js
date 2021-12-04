@@ -7,10 +7,6 @@ var signin = require('../server/signin')
 var search = require('../server/search')
 
 module.exports = function (app) {
-    app.post('/test', (req, res) => {
-        // res.send('aaaatest') 
-        dbserver.findUser(res)
-    })
     app.post('/mail', (req, res) => {
         let mail = req.body.mail
         emailserver.emailSignUp(mail, res)
@@ -32,10 +28,6 @@ module.exports = function (app) {
     app.post('/signin/match', (req, res) => {
         signin.signIn(req, res)
     })
-    //token 测试
-    app.post('/signin/test', (req, res) => {
-        signin.test(req, res)
-    })
 
 
     //搜索页面
@@ -51,4 +43,12 @@ module.exports = function (app) {
     app.post('/search/isInGroup', (req, res) => {
         search.isInGroup(req, res)
     })
+
+
+
+    //token 测试
+    app.post('/signin/test', (req, res) => {
+        res.send('token正确')
+    })
+
 }

@@ -20,10 +20,15 @@ app.all("*", function (req, res, next) {
 app.use(bodyParser.json());
 
 app.use(function (req, res, next) {
-    if (typeof (req.body.token) !== undefined) {
+    if (typeof (req.body.token) != 'undefined') {
         let token = req.body.token
         let tokenMatch = jwt.vertifyToken(token)
-        console.log('及时' + tokenMatch);
+        if (tokenMatch == 1) {
+            next()
+        } else {
+            res.send({ status: 300 })
+        }
+
     } else {
         next()
     }
