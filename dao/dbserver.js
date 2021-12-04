@@ -81,10 +81,11 @@ exports.userMath = function (data, pwd, res) {
 
 //搜索用户
 exports.searchUser = function (data, res) {
+    let wherestr
     if (data == 'YChat') {
-        let wherestr = {}
+        wherestr = {}
     } else {
-        let wherestr = { $or: [{ 'name': { $regex: data } }, { 'email': { $regex: data } }] }
+        wherestr = { $or: [{ 'name': { $regex: data } }, { 'email': { $regex: data } }] }
     }
     let out = {
         'name': 1,
@@ -119,10 +120,11 @@ exports.isFriend = function (uid, fid, res) {
 
 //搜索群
 exports.searchGroup = function (data, res) {
+    let wherestr
     if (data == 'YChat') {
-        let wherestr = {}
+        wherestr = {}
     } else {
-        let wherestr = { 'name': { $regex: data } }
+        wherestr = { 'name': { $regex: data } }
     }
     let out = {
         'name': 1,

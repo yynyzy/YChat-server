@@ -1,6 +1,6 @@
 const express = require('express')
 const bodyParser = require('body-parser')
-
+const jwt = require('./dao/jwt')
 const app = express()
 
 app.all("*", function (req, res, next) {
@@ -18,6 +18,17 @@ app.all("*", function (req, res, next) {
         next();
 });
 app.use(bodyParser.json());
+
+app.use(function (req, res, next) {
+    if (typeof (req.body.token) !== undefined) {
+        let token = req.body.token
+        let tokenMatch = jwt.vertifyToken(token)
+        console.log('及时' + tokenMatch);
+    } else {
+        next()
+    }
+})
+
 require('./router/index')(app)
 
 

@@ -4,6 +4,7 @@ var dbserver = require('../dao/dbserver')
 var emailserver = require('../dao/emailserver')
 var signup = require('../server/signup')
 var signin = require('../server/signin')
+var search = require('../server/search')
 
 module.exports = function (app) {
     app.post('/test', (req, res) => {
@@ -34,5 +35,20 @@ module.exports = function (app) {
     //token 测试
     app.post('/signin/test', (req, res) => {
         signin.test(req, res)
+    })
+
+
+    //搜索页面
+    app.post('/search/user', (req, res) => {
+        search.searchUser(req, res)
+    })
+    app.post('/search/isFriend', (req, res) => {
+        search.isFriend(req, res)
+    })
+    app.post('/search/group', (req, res) => {
+        search.group(req, res)
+    })
+    app.post('/search/isInGroup', (req, res) => {
+        search.isInGroup(req, res)
     })
 }
