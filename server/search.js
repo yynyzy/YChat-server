@@ -22,3 +22,4 @@ exports.isInGroup = function (req, res) {
     let gid = req.body.gid
     dbserver.isInGroup(uid, gid, res)
 }
+

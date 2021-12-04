@@ -5,6 +5,7 @@ var emailserver = require('../dao/emailserver')
 var signup = require('../server/signup')
 var signin = require('../server/signin')
 var search = require('../server/search')
+var user = require('../server/userdetail')
 
 module.exports = function (app) {
     app.post('/mail', (req, res) => {
@@ -17,7 +18,6 @@ module.exports = function (app) {
         signup.signUp(req, res)
     })
 
-
     //用户邮箱是否注册
     app.post('/signup/judge', (req, res) => {
         signup.judgeValue(req, res)
@@ -28,7 +28,6 @@ module.exports = function (app) {
     app.post('/signin/match', (req, res) => {
         signin.signIn(req, res)
     })
-
 
     //搜索页面
     app.post('/search/user', (req, res) => {
@@ -42,6 +41,21 @@ module.exports = function (app) {
     })
     app.post('/search/isInGroup', (req, res) => {
         search.isInGroup(req, res)
+    })
+
+    //用户详情
+    //详情
+    app.post('/user/detail', (req, res) => {
+        user.userDetail(req, res)
+    })
+    app.post('/user/update', (req, res) => {
+        user.userUpdate(req, res)
+    })
+    app.post('/user/updatemarkname', (req, res) => {
+        user.friendMarkName(req, res)
+    })
+    app.post('/user/getmarkname', (req, res) => {
+        user.getMarkName(req, res)
     })
 
 

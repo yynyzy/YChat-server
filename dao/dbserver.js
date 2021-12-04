@@ -41,7 +41,7 @@ exports.countUserValued = function () {
             res.send({ status: 500 })
 
         } else {
-            res.sendStatus({ status: 200, result })
+            res.send({ status: 200, result })
 
         }
     })
@@ -152,6 +152,116 @@ exports.isInGroup = function (uid, fid, res) {
             } else {
                 res.send({ status: 400 })
             }
+        }
+    })
+}
+
+//用户详情
+exports.userDetail = function (id, res) {
+    let wherestr = { '_id': id }
+    let out = { 'psw': 0 }
+    User.findOne(wherestr, out, function (err, result) {
+        if (err) {
+            res.send({ status: 500 })
+        } else {
+            res.send({ status: 200, result })
+        }
+    })
+}
+
+//用户信息修改
+function update(data, update, res) {
+    User.findByIdAndUpdate(data, update, function (err, result) {
+        if (err) {
+            res.send({ status: 500 })
+        } else {
+            res.send({ status: 200 })
+        }
+    })
+}
+
+//用户信息修改
+exports.userUpdate = function (data, res) {
+    let updatestr = {}
+    if (typeof (data.pwd) != 'undefined') {
+        User.find({ '_id': data.id }, { 'psw': data.pwd }, function (err, result) {
+            if (err) {
+                res.send({ status: 500 })
+            } else {
+                if (result == '') {
+                    res.send({ status: 400 })
+                }
+                result.map(function (e) {
+                    const pwdMatch = bcrypt.verification(data.pwd, e.psw)
+                    console.log(pwdMatch);
+                    if (pwdMatch) {
+                        if (data.type == 'psw') {
+                            let password = bcrypt.encryption(data.data)
+                            updatestr[data.type] = password
+                            update(data.id, updatestr, res)
+                        } else {
+                            updatestr[data.type] = data.data
+                            User.countDocuments(updatestr, function (err, result) {
+                                if (err) {
+                                    res.send({ status: 500 })
+                                } else {
+                                    if (result == 0) {
+                                        update(data.id, updatestr, res)
+                                    } else {
+                                        res.send({ status: 300 })
+                                    }
+                                }
+                            })
+
+                        }
+                    } else {
+                        res.send({ status: 400 })
+                    }
+                })
+            }
+        })
+    } else if (data.type == 'name') {
+        updatestr[data.type] = data.data
+        User.countDocuments(updatestr, function (err, result) {
+            if (err) {
+                res.send({ status: 500 })
+            } else {
+                if (result == 0) {
+                    update(data.id, updatestr, res)
+                } else {
+                    res.send({ status: 300 })
+                }
+            }
+        })
+
+
+    } else {
+        updatestr[data.type] = data.data
+        update(data.id, updatestr, res)
+    }
+}
+//获取好友昵称
+exports.getMarkName = function (data, res) {
+    let wherestr = { 'userID': data.uid, 'friendID': data.fid }
+    let out = { 'markname': 1 }
+    Friend.findOne(wherestr, out, function (err, result) {
+        if (err) {
+            res.send({ status: 500 })
+        } else {
+            res.send({ status: 200 })
+        }
+    })
+}
+
+//修改好友昵称
+exports.friendMarkName = function (data, res) {
+    let wherestr = { 'userID': data.uid, 'friendID': data.fid }
+    let updatestr = { 'markname': data.name }
+    Friend.updateOne(wherestr, updatestr, function (err, result) {
+        if (err) {
+            res.send({ status: 500 })
+        } else {
+            res.send({ status: 200 })
         }
     })
 }
