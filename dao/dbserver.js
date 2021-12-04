@@ -265,3 +265,76 @@ exports.friendMarkName = function (data, res) {
         }
     })
 }
+
+//好友操作
+//添加好友
+exports.buildFriend = function (uid, fid, state, res) {
+    let data = {
+        userID: uid,
+        friendID: fid,
+        state: state,
+        time: new Date(),
+        lastTime: new Date(),
+    }
+    let friend = new Friend(data)
+
+    friend.save(function (err, result) {
+        if (err) {
+            res.send({ status: 500 })
+        } else {
+            res.send({ status: 200 })
+        }
+    })
+}
+
+//好友最后通讯时间
+exports.upFriendLastTime = function (uid, fid) {
+    let wherestr = { 'userID': uid, 'friendID': fid };
+    let updatestr = { 'lastTime': new Date() }
+
+    Friend.updateOne(wherestr, updatestr, function (err, result) {
+        if (err) {
+            res.send({ status: 500 })
+        } else {
+            res.send({ status: 200 })
+        }
+    })
+}
+
+//添加一对一消息
+exports.insertMsg = function (uid, fid, msg, type, res) {
+    let data = {
+        userID: uid,
+        friendID: fid,
+        message: msg,
+        types: type,
+        time: new Date(),
+        state: 1
+    }
+    let message = new Message(data)
+
+    message.save(function (err, result) {
+        if (err) {
+            res.send({ status: 500 })
+        } else {
+            res.send({ status: 200 })
+        }
+    })
+}
+
+//好友申请
+exports.applyFriend = function (data, res) {
+    let wherestr = { 'userID': data.uid, 'friendID': data.fid }
+    Friend.countDocuments(wherestr, function (err, result) {
+        if (err) {
+            res.send({ status: 500 })
+        } else {
+            if (result == 0) {
+                this.buildFriend(data.uid, data.fid, 2)
+                this.buildFriend(data.fid, data.uid, 1)
+            } else {
+                this.upFriendLastTime(data.uid, data.fid)
+            }
+        }
+    })
+}

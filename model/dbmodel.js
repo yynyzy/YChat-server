@@ -21,7 +21,10 @@ var FriendSchema = new Schema({
     userID: { type: Schema.Types.ObjectId, ref: 'User' },
     friendID: { type: Schema.Types.ObjectId, ref: 'User' },
     state: { type: String },
-    time: { type: Date }
+    markname: { type: String },
+    time: { type: Date },
+    lastTime: { type: Date }
+
 })
 //一对一消息表
 var MessageSchema = new Schema({
@@ -47,6 +50,7 @@ var GroupUserSchema = new Schema({
     name: { type: String },
     tip: { type: Number, default: 0 },
     time: { type: Date },
+    lastTime: { type: Date },
     shied: { type: Number }
 })
 
