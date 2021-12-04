@@ -32,7 +32,7 @@ module.exports = function (app) {
         signin.signIn(req, res)
     })
     //token 测试
-    app.get('/signin/test', (req, res) => {
+    app.post('/signin/test', (req, res) => {
         signin.test(req, res)
     })
 }
