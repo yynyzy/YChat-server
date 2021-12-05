@@ -280,9 +280,9 @@ exports.buildFriend = function (uid, fid, state, res) {
 
     friend.save(function (err, result) {
         if (err) {
-            res.send({ status: 500 })
+            console.log('申请好友表出错');
         } else {
-            res.send({ status: 200 })
+            // res.send({ status: 200 })
         }
     })
 }
@@ -294,9 +294,10 @@ exports.upFriendLastTime = function (uid, fid) {
 
     Friend.updateOne(wherestr, updatestr, function (err, result) {
         if (err) {
-            res.send({ status: 500 })
+            console.log('更新好友最后通讯时间出错');
+            // res.send({ status: 500 })
         } else {
-            res.send({ status: 200 })
+            // res.send({ status: 200 })
         }
     })
 }
@@ -325,6 +326,7 @@ exports.insertMsg = function (uid, fid, msg, type, res) {
 //好友申请
 exports.applyFriend = function (data, res) {
     let wherestr = { 'userID': data.uid, 'friendID': data.fid }
+    console.log(this.buildFriend);
     Friend.countDocuments(wherestr, function (err, result) {
         if (err) {
             res.send({ status: 500 })
@@ -334,7 +336,9 @@ exports.applyFriend = function (data, res) {
                 this.buildFriend(data.fid, data.uid, 1)
             } else {
                 this.upFriendLastTime(data.uid, data.fid)
+                this.upFriendLastTime(data.fid, data.uid)
             }
+            this.insertMsg(data.uid, data.fid, data.msg, 0, res)
         }
     })
 }

@@ -6,6 +6,7 @@ var signup = require('../server/signup')
 var signin = require('../server/signin')
 var search = require('../server/search')
 var user = require('../server/userdetail')
+var friend = require('../server/friend')
 
 module.exports = function (app) {
     app.post('/mail', (req, res) => {
@@ -58,7 +59,11 @@ module.exports = function (app) {
         user.getMarkName(req, res)
     })
 
-
+    //好友操作
+    //申请好友
+    app.post('/friend/applyfriend', (req, res) => {
+        friend.applyFriend(req, res)
+    })
 
     //token 测试
     app.post('/signin/test', (req, res) => {
