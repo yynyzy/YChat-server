@@ -404,22 +404,48 @@ exports.getUsers = function (data, res) {
 
 //按要求获取一条一对一消息
 exports.getOneMsg = function (data, res) {
-    let query = Message.findOne({ $or: [{ 'userID': data.uid, 'friendID': data.fid }, { 'userID': data.fid, 'friendID': data.uid }] })
+    let query = Message.findOne({})
     //查询条件
-    query.where({ 'userID': data.uid, 'state': data.state })
+    query.where({ $or: [{ 'userID': data.uid, 'friendID': data.fid }, { 'userID': data.fid, 'friendID': data.uid }] })
     //排序方式，最后通讯时间
     query.sort({ 'time': -1 })
-    query.exec().then(function (e) {
-        let result = e.map(function (ver) {
-            return {
-                message: ver.message,
-                time: ver.time,
-                types: ver.types
-            }
-        })
+    query.exec().then(function (ver) {
+        let result = {
+            message: ver.message,
+            time: ver.time,
+            types: ver.types
+        }
+
         res.send({ status: 200, result: result })
     }).catch(function (err) {
         res.send({ status: 500 })
     })
 
+}
+
+//汇总一对一消息未读数
+exports.unreadMsg = function (data, res) {
+    let wherestr = { 'userID': data.uid, 'friendID': data.fid, 'state': 1 }
+    Message.countDocuments(wherestr, function (err, result) {
+        if (err) {
+            res.send({ status: 500 })
+        } else {
+            res.send({ status: 200, result })
+        }
+    })
+}
+
+//好友消息已读
+exports.updateMsg = function (data, res) {
+    //修改条件
+    let wherestr = { 'userID': data.uid, 'friendID': data.fid, 'state': 1 }
+
+    let updatestr = { 'state': 0 }
+    Message.countDocuments(wherestr, updatestr, function (err, result) {
+        if (err) {
+            res.send({ status: 500 })
+        } else {
+            res.send({ status: 200 })
+        }
+    })
 }

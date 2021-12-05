@@ -78,7 +78,19 @@ module.exports = function (app) {
     app.post('/index/getFriend', (req, res) => {
         index.getFriend(req, res)
     })
+    //获取最后一条消息
+    app.post('/index/getLastMsg', (req, res) => {
+        index.getLastMsg(req, res)
+    })
+    //汇总一对一消息未读数
+    app.post('/index/unreadMsg', (req, res) => {
+        index.unreadMsg(req, res)
+    })
 
+    //好友消息已读
+    app.post('/index/updateMsg', (req, res) => {
+        index.updateMsg(req, res)
+    })
 
 
 
