@@ -12,3 +12,10 @@ exports.updateFriendState = function (req, res) {
     dbserver.updateFriendState(data, res)
 
 }
+
+//拒绝或删除好友
+exports.deleteFriend = function (req, res) {
+    let data = req.body
+    dbserver.deleteFriend(data, res)
+
+}

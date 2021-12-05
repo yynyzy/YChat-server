@@ -68,8 +68,10 @@ module.exports = function (app) {
     app.post('/friend/updateFriendState', (req, res) => {
         friend.updateFriendState(req, res)
     })
-
-
+    //拒绝或删除好友
+    app.post('/friend/deleteFriend', (req, res) => {
+        friend.deleteFriend(req, res)
+    })
 
 
 

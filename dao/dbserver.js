@@ -361,3 +361,17 @@ exports.updateFriendState = function (data, res) {
         }
     })
 }
+//拒绝或删除好友
+exports.deleteFriend = function (data, res) {
+    let wherestr = {
+        $or: [{ 'userID': data.uid, 'friendID': data.fid }, { 'userID': data.fid, 'friendID': data.uid }]
+    }
+
+    Friend.deleteMany(wherestr, { 'state': 0 }, function (err, result) {
+        if (err) {
+            res.send({ status: 500 })
+        } else {
+            res.send({ status: 200 })
+        }
+    })
+}
