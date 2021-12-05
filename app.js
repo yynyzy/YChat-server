@@ -17,7 +17,10 @@ app.all("*", function (req, res, next) {
     else
         next();
 });
-app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
+app.use(bodyParser.json({ limit: '50mb' }));
+
+app.use(express.static(__dirname + '/data'))
 
 app.use(function (req, res, next) {
     if (typeof (req.body.token) != 'undefined') {
@@ -35,6 +38,7 @@ app.use(function (req, res, next) {
 })
 
 require('./router/index')(app)
+require('./router/files')(app)
 
 
 //404

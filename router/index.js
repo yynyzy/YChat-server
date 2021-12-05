@@ -7,6 +7,7 @@ var signin = require('../server/signin')
 var search = require('../server/search')
 var user = require('../server/userdetail')
 var friend = require('../server/friend')
+var index = require('../server/index')
 
 module.exports = function (app) {
     app.post('/mail', (req, res) => {
@@ -73,7 +74,10 @@ module.exports = function (app) {
         friend.deleteFriend(req, res)
     })
 
-
+    //主页
+    app.post('/index/getFriend', (req, res) => {
+        index.getFriend(req, res)
+    })
 
 
 

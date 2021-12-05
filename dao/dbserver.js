@@ -375,3 +375,51 @@ exports.deleteFriend = function (data, res) {
         }
     })
 }
+
+//按要求获取好友列表
+exports.getUsers = function (data, res) {
+    let query = Friend.find({})
+    //查询条件
+    query.where({ 'userID': data.uid, 'state': data.state })
+    //查找FriendID 关联的user对象
+    query.populate('friendID')
+    //排序方式，最后通讯时间
+    query.sort({ 'lastTime': -1 })
+    query.exec().then(function (e) {
+        let result = e.map(function (ver) {
+            return {
+                id: ver.friendID._id,
+                name: ver.friendID.name,
+                markname: ver.markname,
+                imgurl: ver.friendID.imgurl,
+                lastTime: ver.lastTime
+            }
+        })
+        res.send({ status: 200, result: result })
+    }).catch(function (err) {
+        res.send({ status: 500 })
+    })
+
+}
+
+//按要求获取一条一对一消息
+exports.getOneMsg = function (data, res) {
+    let query = Message.findOne({ $or: [{ 'userID': data.uid, 'friendID': data.fid }, { 'userID': data.fid, 'friendID': data.uid }] })
+    //查询条件
+    query.where({ 'userID': data.uid, 'state': data.state })
+    //排序方式，最后通讯时间
+    query.sort({ 'time': -1 })
+    query.exec().then(function (e) {
+        let result = e.map(function (ver) {
+            return {
+                message: ver.message,
+                time: ver.time,
+                types: ver.types
+            }
+        })
+        res.send({ status: 200, result: result })
+    }).catch(function (err) {
+        res.send({ status: 500 })
+    })
+
+}
