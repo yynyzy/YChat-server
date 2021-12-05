@@ -64,6 +64,17 @@ module.exports = function (app) {
     app.post('/friend/applyfriend', (req, res) => {
         friend.applyFriend(req, res)
     })
+    //更新好友状态
+    app.post('/friend/updateFriendState', (req, res) => {
+        friend.updateFriendState(req, res)
+    })
+
+
+
+
+
+
+
 
     //token 测试
     app.post('/signin/test', (req, res) => {

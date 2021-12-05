@@ -6,6 +6,7 @@ var User = dbmodel.model('User')
 var Friend = dbmodel.model('Friend')
 var Group = dbmodel.model('Group')
 var GroupUser = dbmodel.model('GroupUser')
+var Message = dbmodel.model('Message')
 
 exports.buildUser = function (name, mail, pwd, res) {
 
@@ -268,7 +269,7 @@ exports.friendMarkName = function (data, res) {
 
 //好友操作
 //添加好友
-exports.buildFriend = function (uid, fid, state, res) {
+exports.buildFriend = function (uid, fid, state) {
     let data = {
         userID: uid,
         friendID: fid,
@@ -288,11 +289,13 @@ exports.buildFriend = function (uid, fid, state, res) {
 }
 
 //好友最后通讯时间
-exports.upFriendLastTime = function (uid, fid) {
-    let wherestr = { 'userID': uid, 'friendID': fid };
+exports.upFriendLastTime = function (data) {
+    let wherestr = {
+        $or: [{ 'userID': data.uid, 'friendID': data.fid }, { 'userID': data.fid, 'friendID': data.uid }]
+    }
     let updatestr = { 'lastTime': new Date() }
 
-    Friend.updateOne(wherestr, updatestr, function (err, result) {
+    Friend.updateMany(wherestr, updatestr, function (err, result) {
         if (err) {
             console.log('更新好友最后通讯时间出错');
             // res.send({ status: 500 })
@@ -326,19 +329,35 @@ exports.insertMsg = function (uid, fid, msg, type, res) {
 //好友申请
 exports.applyFriend = function (data, res) {
     let wherestr = { 'userID': data.uid, 'friendID': data.fid }
-    console.log(this.buildFriend);
+    const { buildFriend, upFriendLastTime, insertMsg } = this
     Friend.countDocuments(wherestr, function (err, result) {
         if (err) {
             res.send({ status: 500 })
         } else {
             if (result == 0) {
-                this.buildFriend(data.uid, data.fid, 2)
-                this.buildFriend(data.fid, data.uid, 1)
+
+                buildFriend(data.uid, data.fid, 2)
+                buildFriend(data.fid, data.uid, 1)
             } else {
-                this.upFriendLastTime(data.uid, data.fid)
-                this.upFriendLastTime(data.fid, data.uid)
+                upFriendLastTime(data)
+                upFriendLastTime(data)
             }
-            this.insertMsg(data.uid, data.fid, data.msg, 0, res)
+            insertMsg(data.uid, data.fid, data.msg, 0, res)
+        }
+    })
+}
+
+//更新好友状态
+exports.updateFriendState = function (data, res) {
+    let wherestr = {
+        $or: [{ 'userID': data.uid, 'friendID': data.fid }, { 'userID': data.fid, 'friendID': data.uid }]
+    }
+
+    Friend.updateMany(wherestr, { 'state': 0 }, function (err, result) {
+        if (err) {
+            res.send({ status: 500 })
+        } else {
+            res.send({ status: 200 })
         }
     })
 }
