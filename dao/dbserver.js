@@ -33,18 +33,14 @@ exports.buildUser = function (name, mail, pwd, res) {
 }
 
 //匹配用户表元素个数
-exports.countUserValued = function () {
+exports.countUserValued = function (data, type, res) {
     let wherestr = {}
-
     wherestr[type] = data
-
     User.countDocuments(wherestr, function (err, result) {
         if (err) {
             res.send({ status: 500 })
-
         } else {
             res.send({ status: 200, result })
-
         }
     })
 }
