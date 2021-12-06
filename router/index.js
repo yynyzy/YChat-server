@@ -93,6 +93,21 @@ module.exports = function (app) {
     })
 
 
+    //按要求获取群列表
+    app.post('/index/getGroup', (req, res) => {
+        index.getGroup(req, res)
+    })
+    //按要求获取群消息
+    app.post('/index/getOneGroupMsg', (req, res) => {
+        index.getOneGroupMsg(req, res)
+    })
+
+    //群消息状态修改
+    app.post('/index/updateGroupMsg', (req, res) => {
+        index.updateGroupMsg(req, res)
+    })
+
+
 
     //token 测试
     app.post('/signin/test', (req, res) => {

@@ -23,3 +23,21 @@ exports.updateMsg = function (req, res) {
     let data = req.body
     dbserver.updateMsg(data, res)
 }
+
+//按要求获取群列表
+exports.getGroup = function (req, res) {
+    let uid = req.body.uid
+    dbserver.getGroup(uid, res)
+}
+
+//按要求获取群消息
+exports.getOneGroupMsg = function (req, res) {
+    let gid = req.body.gid
+    dbserver.getOneGroupMsg(gid, res)
+}
+
+//群消息状态修改
+exports.updateGroupMsg = function (req, res) {
+    let data = req.body
+    dbserver.updateGroupMsg(data, res)
+}

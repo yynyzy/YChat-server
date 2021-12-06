@@ -7,6 +7,7 @@ var Friend = dbmodel.model('Friend')
 var Group = dbmodel.model('Group')
 var GroupUser = dbmodel.model('GroupUser')
 var Message = dbmodel.model('Message')
+var GroupMsg = dbmodel.model('GroupMsg')
 
 exports.buildUser = function (name, mail, pwd, res) {
 
@@ -442,6 +443,69 @@ exports.updateMsg = function (data, res) {
 
     let updatestr = { 'state': 0 }
     Message.countDocuments(wherestr, updatestr, function (err, result) {
+        if (err) {
+            res.send({ status: 500 })
+        } else {
+            res.send({ status: 200 })
+        }
+    })
+}
+
+//按要求获取群列表
+exports.getGroup = function (id, res) {
+    //id 为用户所在的群
+    let query = GroupUser.find({})
+
+    query.where({ 'userID': id })
+    //查找 userID 关联的user对象
+    query.populate('groupID')
+    query.sort({ 'lastTime': -1 })
+    query.exec().then(function (e) {
+        let result = e.map(function (ver) {
+            return {
+                id: ver.groupID._id,
+                name: ver.groupID.name,
+                markname: ver.name,
+                imgurl: ver.groupID.imgurl,
+                lastTime: ver.lastTime,
+                tip: ver.tip
+            }
+        })
+        res.send({ status: 200, result: result })
+    }).catch(function (err) {
+        res.send({ status: 500 })
+    })
+}
+
+//按要求获取群消息
+exports.getOneGroupMsg = function (gid, res) {
+    let query = GroupMsg.findOne({})
+    //查询条件
+    query.where({ $or: { 'groupID': gid } })
+    query.populate('userID')
+    //排序方式，最后通讯时间
+    query.sort({ 'time': -1 })
+    query.exec().then(function (ver) {
+        let result = {
+            message: ver.message,
+            time: ver.time,
+            types: ver.types,
+            name: ver.userId.name
+        }
+
+        res.send({ status: 200, result: result })
+    }).catch(function (err) {
+        res.send({ status: 500 })
+    })
+}
+
+//群消息状态修改
+exports.updateGroupMsg = function (data, res) {
+    //修改条件
+    let wherestr = { 'userID': data.uid, 'groupID': data.gid }
+    //修改内容
+    let updatestr = { 'tip': 0 }
+    Message.updateOne(wherestr, updatestr, function (err, result) {
         if (err) {
             res.send({ status: 500 })
         } else {
