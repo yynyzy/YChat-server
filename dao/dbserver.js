@@ -46,7 +46,7 @@ exports.countUserValued = function (data, type, res) {
 }
 
 //用户验证
-exports.userMath = function (data, pwd, res) {
+exports.userMatch = function (data, pwd, res) {
     let wherestr = { $or: [{ 'name': data }, { 'email': data }] };
     let out = { 'name': 1, 'imgurl': 1, 'psw': 1 }
 
