@@ -246,7 +246,7 @@ exports.getMarkName = function (data, res) {
         if (err) {
             res.send({ status: 500 })
         } else {
-            res.send({ status: 200 })
+            res.send({ status: 200, result })
         }
     })
 }
@@ -389,7 +389,8 @@ exports.getUsers = function (data, res) {
                 name: ver.friendID.name,
                 markname: ver.markname,
                 imgurl: ver.friendID.imgurl,
-                lastTime: ver.lastTime
+                lastTime: ver.lastTime,
+                type: 0
             }
         })
         res.send({ status: 200, result: result })
@@ -423,6 +424,7 @@ exports.getOneMsg = function (data, res) {
 //汇总一对一消息未读数
 exports.unreadMsg = function (data, res) {
     let wherestr = { 'userID': data.uid, 'friendID': data.fid, 'state': 1 }
+    console.log(wherestr);
     Message.countDocuments(wherestr, function (err, result) {
         if (err) {
             res.send({ status: 500 })
@@ -464,7 +466,8 @@ exports.getGroup = function (id, res) {
                 markname: ver.name,
                 imgurl: ver.groupID.imgurl,
                 lastTime: ver.lastTime,
-                tip: ver.tip
+                tip: ver.tip,
+                type: 1
             }
         })
         res.send({ status: 200, result: result })
@@ -508,4 +511,34 @@ exports.updateGroupMsg = function (data, res) {
             res.send({ status: 200 })
         }
     })
+}
+
+//分页获取一对一聊天数据
+exports.msg = function (data, res) {
+    var skipNum = data.nowPage * data.pageSize
+    let query = Message.find({})
+    query.where({ $or: [{ 'userID': data.uid, 'friendID': data.fid }, { 'userID': data.fid, 'friendID': data.uid }] })
+    query.sort({ 'time': -1 })
+
+    query.populate('userID')
+
+    query.skip(skipNum)
+    query.limit(data.pageSize)
+
+    query.exec().then(function (e) {
+        let result = e.map(function (ver) {
+            return {
+                id: ver.id,
+                message: ver.message,
+                types: ver.types,
+                time: ver.time,
+                fromId: ver.userID._id,
+                imgurl: ver.userID.imgurl
+            }
+        })
+        res.send({ status: 200, result })
+    }).catch(function (err) {
+        res.send({ status: 500 })
+    })
+
 }

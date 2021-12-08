@@ -8,6 +8,7 @@ var search = require('../server/search')
 var user = require('../server/userdetail')
 var friend = require('../server/friend')
 var index = require('../server/index')
+var chat = require('../server/chat')
 
 module.exports = function (app) {
     app.post('/mail', (req, res) => {
@@ -105,6 +106,12 @@ module.exports = function (app) {
     //群消息状态修改
     app.post('/index/updateGroupMsg', (req, res) => {
         index.updateGroupMsg(req, res)
+    })
+
+
+    //群消息已读
+    app.post('/chat/msg', (req, res) => {
+        chat.msg(req, res)
     })
 
 
