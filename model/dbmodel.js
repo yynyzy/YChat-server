@@ -12,7 +12,7 @@ var UserSchema = new Schema({
     birth: { type: Date },
     phone: { type: Number },
     explain: { type: String },
-    imgurl: { type: String, default: 'user.png' },
+    imgurl: { type: String, default: '/user/user.png' },
     time: { type: Date }
 })
 
