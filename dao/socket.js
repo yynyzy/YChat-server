@@ -13,7 +13,10 @@ module.exports = function (io) {
         //用户一对一消息发送
         socket.on('msg', (msg, fromId, toId) => {
             console.log(msg);
-            socket.to(users[toId]).emit('msg', msg, fromId)
+            if (users[toId]) {
+
+                socket.to(users[toId]).emit('backmsg', msg, fromId)
+            }
         })
 
 
