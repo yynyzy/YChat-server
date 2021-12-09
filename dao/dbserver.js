@@ -191,7 +191,6 @@ exports.userUpdate = function (data, res) {
                 }
                 result.map(function (e) {
                     const pwdMatch = bcrypt.verification(data.pwd, e.psw)
-                    console.log(pwdMatch);
                     if (pwdMatch) {
                         if (data.type == 'psw') {
                             let password = bcrypt.encryption(data.data)
@@ -424,7 +423,6 @@ exports.getOneMsg = function (data, res) {
 //汇总一对一消息未读数
 exports.unreadMsg = function (data, res) {
     let wherestr = { 'userID': data.uid, 'friendID': data.fid, 'state': 1 }
-    console.log(wherestr);
     Message.countDocuments(wherestr, function (err, result) {
         if (err) {
             res.send({ status: 500 })

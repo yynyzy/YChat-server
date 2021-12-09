@@ -6,9 +6,7 @@ const app = express()
 //socket.io
 var server = app.listen(8082)
 var io = require('socket.io').listen(server)
-io.on('connection', (socket) => {
-    console.log('连接成功')
-})
+require('./dao/socket')(io)
 
 app.all("*", function (req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
