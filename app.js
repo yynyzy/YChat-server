@@ -3,6 +3,13 @@ const bodyParser = require('body-parser')
 const jwt = require('./dao/jwt')
 const app = express()
 
+//socket.io
+var server = app.listen(8082)
+var io = require('socket.io').listen(server)
+io.on('connection', (socket) => {
+    console.log('连接成功')
+})
+
 app.all("*", function (req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With,Content-Type, Accept");
