@@ -1,3 +1,5 @@
+let dbserver = require('./dbserver')
+
 module.exports = function (io) {
     var users = {}
 
@@ -13,10 +15,15 @@ module.exports = function (io) {
         //用户一对一消息发送
         socket.on('msg', (msg, fromId, toId) => {
             console.log(msg);
-            if (users[toId]) {
+            //修改好友最后通讯时间
+            dbserver.upFriendLastTime({ uid: fromId, fid: toId });
+            //存储一对一消息
+            dbserver.insertMsg(fromId, toId, msg.message, msg.types)
 
-                socket.to(users[toId]).emit('backmsg', msg, fromId)
+            if (users[toId]) {
+                socket.to(users[toId]).emit('backmsg', msg, fromId, 0)
             }
+            socket.emit('msg', msg, toId, 1)
         })
 
 

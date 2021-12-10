@@ -315,9 +315,13 @@ exports.insertMsg = function (uid, fid, msg, type, res) {
 
     message.save(function (err, result) {
         if (err) {
-            res.send({ status: 500 })
+            if (res) {
+                res.send({ status: 500 })
+            }
         } else {
-            res.send({ status: 200 })
+            if (res) {
+                res.send({ status: 200 })
+            }
         }
     })
 }
@@ -422,7 +426,7 @@ exports.getOneMsg = function (data, res) {
 
 //汇总一对一消息未读数
 exports.unreadMsg = function (data, res) {
-    let wherestr = { 'userID': data.uid, 'friendID': data.fid, 'state': 1 }
+    let wherestr = { 'userID': data.fid, 'friendID': data.uid, 'state': 1 }
     Message.countDocuments(wherestr, function (err, result) {
         if (err) {
             res.send({ status: 500 })
