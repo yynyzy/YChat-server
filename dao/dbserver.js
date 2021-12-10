@@ -451,6 +451,82 @@ exports.updateMsg = function (data, res) {
     })
 }
 
+//新建群
+function insertGroupUser(data) {
+    var groupuser = new GroupUser(data)
+
+    groupuser.save(function (err, result) {
+        if (err) {
+            res.send({ status: 500 })
+        } else {
+            console.log('添加群成员成功');
+        }
+    })
+}
+exports.createGroup = function (data, res) {
+    //修改条件
+    let groupData = {
+        userID: data.uid,
+        name: data.name,
+        imgurl: data.imgurl,
+        time: new Date(),
+    }
+    var group = new Group(groupData)
+    group.save(function (err, result) {
+        if (err) {
+            res.send({ status: 500 })
+        } else {
+            console.log(data, "1");
+            Group.find({ 'userID': data.uid, 'name': data.name }, { '_id': 1 }, function (err, result) {
+                if (err) {
+                    res.send({ status: 500 })
+                } else {
+                    //添加新成员到列表
+                    result.map(function (gid) {
+                        //添加群主入群
+                        let udata = {
+                            groupID: gid._id,
+                            userID: data.uid,
+                            time: new Date(),
+                            lastTime: new Date()
+                        }
+                        //加入
+                        insertGroupUser(udata)
+
+                        //添加好友入群
+                        for (let i = 0; i < data.user.length; i++) {
+                            let fdata = {
+                                groupID: gid._id,
+                                userID: data.user[i],
+                                time: new Date(),
+                                lastTime: new Date()
+                            }
+                            insertGroupUser(fdata)
+                        }
+                    })
+                    res.send({ status: 200, result })
+                }
+            })
+
+        }
+    })
+
+}
+
+//添加群成员
+// exports.insertGroupUser = function (id, res) {
+//     var groupuser = new GroupUser(data)
+
+//     groupuser.save(function (err, result) {
+//         if (err) {
+//             res.send({ status: 500 })
+//         } else {
+//             console.log('添加群成员成功');
+//         }
+//     })
+// }
+
+
 //按要求获取群列表
 exports.getGroup = function (id, res) {
     //id 为用户所在的群
